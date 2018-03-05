@@ -1,0 +1,199 @@
+import java.util.*;
+ 
+class Person {
+	String name;
+	int stone;
+}
+ 
+class Game {
+	Person a1;
+	Person a2;
+ 
+	int[][] arr = new int[19][19];
+ 
+	public Game() {
+		a1 = new Person();
+		a2 = new Person();
+	}
+ 
+	public void show() {
+		for (int i = 0; i < 19; i++) {
+			for (int j = 0; j < 19; j++) {
+				System.out.print(arr[i][j]);
+			}
+			System.out.println();
+		}
+	}
+ 
+	public void namestone(String name, int stone) {
+		if (stone == 1) {
+			a1.name = name;
+			a1.stone = stone;
+		} else if (stone == 2) {
+			a2.name = name;
+			a2.stone = stone;
+		}
+ 
+	}
+ 
+	public void start() {
+		Scanner in = new Scanner(System.in);
+		int a = (int) Math.round(1 + Math.random() * 1);
+		System.out.println(a);
+ 
+		System.out.print("사용자 이름을 입력하세요 >> ");
+		String name1 = in.next();
+		System.out.print("사용자 이름을 입력하세요 >> ");
+		String name2 = in.next();
+ 
+		namestone(name1, 1);
+		namestone(name2, 2);
+ 
+		EXIT: while (true) {
+			if (a == 1) {
+				System.out.println(name1 + "의 차례입니다.");
+				System.out.print("19,19 안으로 좌표를 입력해주세요>> ");
+				int x = in.nextInt();
+				int y = in.nextInt();
+ 
+				if (arr[x][y] == 0)
+					arr[x][y] = a1.stone;
+				else
+					continue;
+				a++;
+ 
+				if (check() == 1) {
+					System.out.println(a1.name + "가 이겼습니다.");
+					break EXIT;
+				}
+ 
+			} else if (a == 2) {
+				System.out.println(name2 + "의 차례입니다.");
+				System.out.print("19,19 안으로 좌표를 입력해주세요>> ");
+				int x = in.nextInt();
+				int y = in.nextInt();
+ 
+				if (arr[x][y] == 0)
+					arr[x][y] = a2.stone;
+				else
+					continue;
+				a--;
+ 
+				if (check() == 2) {
+					System.out.println(a2.name + "가 이겼습니다.");
+					break EXIT;
+				}
+			}
+			show();
+		}
+	}
+ 
+	public int check() {
+		int ret = 0;
+		int n = 0;
+		for (int i = 0; i < 19; i++) {
+			for (int j = 0; j < 19; j++) {
+				if (arr[i][j] == 1) {
+					for (int k = i; k < i + 5 && k < 19; k++) // 밑
+					{
+						if (arr[k][j] == 1) {
+							n++;
+						}
+						if (n == 5) {
+							return 1;
+						}
+					}
+					n = 0;
+					for (int k = j; k < j + 5 && k < 19; k++) // 오른쪽
+					{
+						if (arr[i][k] == 1) {
+							n++;
+						}
+						if (n == 5) {
+							return 1;
+						}
+					}
+					n = 0;
+					for (int i1 = i, j1 = j; i1 < i + 5 && j1 < i + 5 && i1 < 19 && j1 < 19; i1++, j1++)// 우하단
+																										// 대각선
+					{
+						if (arr[i1][j1] == 1) {
+							n++;
+						}
+						if (n == 5) {
+							return 1;
+						}
+					}
+					n = 0;
+					if (i > 4) {
+						for (int i1 = i, j1 = j; i1 > i - 5 && j1 < j + 5 && i1 > -1 && j1 < 19; i1--, j1++) {
+							if (arr[i1][j1] == 1) {
+								n++;
+							}
+							if (n == 5) {
+								return 1;
+							}
+						}
+					}
+					n = 0;
+				} else if (arr[i][j] == 2) // 2가 승리
+				{
+					for (int k = i; k < i + 5 && k < 19; k++) // 밑
+					{
+						if (arr[k][j] == 2) {
+							n++;
+						}
+						if (n == 5) {
+							return 2;
+						}
+					}
+					n = 0;
+					for (int k = j; k < j + 5 && k < 19; k++) // 오른쪽
+					{
+						if (arr[i][k] == 2) {
+							n++;
+						}
+						if (n == 5) {
+							return 2;
+						}
+					}
+					n = 0;
+					for (int i1 = i, j1 = j; i1 < i + 5 && j1 < i + 5 && i1 < 19 && j1 < 19; i1++, j1++)// 우하단
+																										// 대각선
+					{
+						if (arr[i1][j1] == 2) {
+							n++;
+						}
+						if (n == 5) {
+							return 2;
+						}
+					}
+					n = 0;
+					if (i > 4) {
+						for (int i1 = i, j1 = j; i1 > i - 5 && j1 < j + 5 && i1 > -1 && j1 < 19; i1--, j1++)// 우상단대각선
+						{
+							if (arr[i1][j1] == 2) {
+								n++;
+							}
+							if (n == 5) {
+								return 2;
+							}
+						}
+					}
+					n = 0;
+				}
+			}
+		}
+		return ret;
+	}
+}
+ 
+public class omok {
+ 
+	public static void main(String[] args) {
+		Game game = new Game();
+		game.start();
+ 
+	}
+ 
+}
